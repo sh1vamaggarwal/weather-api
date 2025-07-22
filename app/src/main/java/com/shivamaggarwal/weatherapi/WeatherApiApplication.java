@@ -1,11 +1,11 @@
 package com.shivamaggarwal.weatherapi;
 
-public class WeatherApiApplication {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
+public class WeatherApiApplication {
     public static void main(String[] args) {
-        System.out.println(new WeatherApiApplication().getGreeting());
+        SpringApplication.run(WeatherApiApplication.class, args);
     }
 }
