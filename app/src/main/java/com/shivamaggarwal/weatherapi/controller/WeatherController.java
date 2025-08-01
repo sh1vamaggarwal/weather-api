@@ -3,8 +3,9 @@ package com.shivamaggarwal.weatherapi.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shivamaggarwal.weatherapi.model.WeatherResponse;
+import com.shivamaggarwal.weatherapi.dto.WeatherDto;
+import com.shivamaggarwal.weatherapi.mapper.WeatherMapper;
+import com.shivamaggarwal.weatherapi.service.VisualCrossingService;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -19,11 +20,19 @@ public class WeatherController {
     @Value("classpath:data/sample.json")
     private Resource resource;
     
+    private final VisualCrossingService visualCrossingService;
+
+    private final WeatherMapper weatherMapper;
+
+    public WeatherController(VisualCrossingService visualCrossingService, WeatherMapper weatherMapper) {
+        this.visualCrossingService = visualCrossingService;
+        this.weatherMapper = weatherMapper;
+    }
+    
     @GetMapping("/weather")
-    public WeatherResponse getWeather(@RequestParam String city) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        WeatherResponse weatherResponse = objectMapper.readValue(resource.getInputStream(), WeatherResponse.class);
-        return weatherResponse;
+    public WeatherDto getWeather(@RequestParam("city") String city) throws Exception {
+        var VisualCrossingResponse = visualCrossingService.getWeatherDate(city);
+        return weatherMapper.toWeatherDto(VisualCrossingResponse);
     }
 
 }

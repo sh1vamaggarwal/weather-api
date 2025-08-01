@@ -1,8 +1,8 @@
-package com.shivamaggarwal.weatherapi.model;
+package com.shivamaggarwal.weatherapi.dto;
 
 import java.util.List;
 
-public class WeatherResponse {
+public class WeatherDto {
     private String name;
     private Main main;
     private List<Weather> weather;
@@ -14,8 +14,8 @@ public class WeatherResponse {
         private double feels_like;
         private double temp_min;
         private double temp_max;
-        private int pressure;
-        private int humidity;
+        private double pressure;
+        private double humidity;
 
         public double getTemp() {
             return temp;
@@ -41,16 +41,16 @@ public class WeatherResponse {
         public void setTemp_max(double temp_max) {
             this.temp_max = temp_max;
         }
-        public int getPressure() {
+        public double getPressure() {
             return pressure;
         }
-        public void setPressure(int pressure) {
+        public void setPressure(double pressure) {
             this.pressure = pressure;
         }
-        public int getHumidity() {
+        public double getHumidity() {
             return humidity;
         }
-        public void setHumidity(int humidity) {
+        public void setHumidity(double humidity) {
             this.humidity = humidity;
         }
         
@@ -83,7 +83,7 @@ public class WeatherResponse {
 
     public static class Wind {
         private double speed;
-        private int deg;
+        private double deg;
 
         public double getSpeed() {
             return speed;
@@ -91,10 +91,10 @@ public class WeatherResponse {
         public void setSpeed(double speed) {
             this.speed = speed;
         }
-        public int getDeg() {
+        public double getDeg() {
             return deg;
         }
-        public void setDeg(int deg) {
+        public void setDeg(double deg) {
             this.deg = deg;
         }        
     }
