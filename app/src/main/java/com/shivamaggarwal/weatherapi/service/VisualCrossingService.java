@@ -1,9 +1,11 @@
 package com.shivamaggarwal.weatherapi.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import com.shivamaggarwal.weatherapi.exception.VisualCrossingException;
 import com.shivamaggarwal.weatherapi.model.external.VisualCrossingResponse;
 
 @Service
@@ -22,6 +24,18 @@ public class VisualCrossingService {
     }
 
     public VisualCrossingResponse getWeatherDate(String city) {
-        return this.restClient.get().uri("/timeline/{city}?unitGroup=us&key={apiKey}&contentType=json", city, this.apiKey).retrieve().body(VisualCrossingResponse.class);
+        try {
+            return restClient.get()
+                .uri("/timeline/{city}?unitGroup=us&key={apiKey}&contentType=json", city, this.apiKey)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (request, response) -> {
+                    String body = response.getBody().toString(); 
+                    throw new VisualCrossingException("Weather API error", response.getStatusCode().value(), body);
+                })
+                .body(VisualCrossingResponse.class);
+        } catch (VisualCrossingException exception) {
+            throw exception;
+        }
+        
     }
 }
