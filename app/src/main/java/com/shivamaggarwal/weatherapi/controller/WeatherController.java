@@ -1,5 +1,7 @@
 package com.shivamaggarwal.weatherapi.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api")
 public class WeatherController {
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
+
     @Value("classpath:data/sample.json")
     private Resource resource;
     
@@ -30,9 +34,17 @@ public class WeatherController {
     }
     
     @GetMapping("/weather")
-    public WeatherDto getWeather(@RequestParam("city") String city) throws Exception {
-        var VisualCrossingResponse = visualCrossingService.getWeatherDate(city);
-        return weatherMapper.toWeatherDto(VisualCrossingResponse);
+    public WeatherDto getWeather(@RequestParam("city") String city) {
+        logger.info("Received GET /weather request for city: '{}'", city);
+        try {
+            var visualCrossingResponse = visualCrossingService.getWeatherDate(city);
+            logger.debug("Visual Crossing API response for city '{}': {}", city, visualCrossingResponse);
+            var weatherDto = weatherMapper.toWeatherDto(visualCrossingResponse);
+            logger.info("Successfully processed GET /weather request for city: '{}'", city);
+            return weatherDto;
+        } catch (Exception e) {
+            logger.error("Failed to process GET /weather request for city: '{}'", city, e);
+            throw e;
+        }
     }
-
 }
